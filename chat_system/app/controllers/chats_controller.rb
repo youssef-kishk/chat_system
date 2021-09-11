@@ -21,7 +21,7 @@ class ChatsController < ApplicationController
         end
         chat = Chat.new(number: max_number+1, application_id: @app.id)
         if chat.save
-            render {Number:chat.number},status: :created
+            render json: {Number:chat.number},status: :created
         else
             render json: {status: 'ERROR', message: 'Chat not created', data:chat.errors},status: :unprocessable_entity
         end     

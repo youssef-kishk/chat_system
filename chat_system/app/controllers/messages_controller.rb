@@ -43,6 +43,12 @@ class MessagesController < ApplicationController
         end
     end
 
+    # GET /applications/[app_token]/chats/[number]/messages/search?search_body=[search_body]
+    def search
+        search_result = Message.search_msg(@chat.id, params[:search_body])
+        render json: search_result, :except => [:id, :chat_id], status: :ok
+    end
+
 
     private
     def msg_params

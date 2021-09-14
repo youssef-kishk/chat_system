@@ -19,12 +19,9 @@ class ChatsController < ApplicationController
         if !max_number.present?
             max_number = 0
         end
-        chat = Chat.new(number: max_number+1, application_id: @app.id)
-        if chat.save
-            render json: {Number:chat.number},status: :created
-        else
-            render json: {status: 'ERROR', message: 'Chat not created', data:chat.errors},status: :unprocessable_entity
-        end     
+        max_number +=1
+        HandleChatWorker.perform_async(max_number, @app.id)
+        render json: {Number:max_number},status: :created    
     end
 
     # DELETE /applications/[app_token]/chats/number

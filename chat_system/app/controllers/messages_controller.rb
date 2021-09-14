@@ -20,12 +20,9 @@ class MessagesController < ApplicationController
         if !max_number.present?
             max_number = 0
         end
-        msg = Message.new(number: max_number+1, chat_id: @chat.id, body: msg_params["body"])
-        if msg.save
-            render json: {Number:msg.number},status: :created
-        else
-            render json: {status: 'ERROR', message: 'Message not created', data:msg.errors},status: :unprocessable_entity
-        end     
+        max_number +=1
+        HandleMessageWorker.perform_async(max_number,@chat.id,msg_params["body"])
+        render json: {Number:max_number},status: :created    
     end
 
     # DELETE /applications/[app_token]/chats/[number]/messages/[number]

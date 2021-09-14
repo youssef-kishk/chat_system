@@ -146,7 +146,7 @@ A simple chat system that allow adding, editing, deleting and searching for appl
     - **Data constraints** : `{ "search_body": 'test' }`
 
 ## Running:
-- **ch chat_system**
+- **cd chat_system**
 - **./run.sh**
     - Apllication runs on port 3002 [http://localhost:3002/]
 

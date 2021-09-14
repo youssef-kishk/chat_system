@@ -14,7 +14,7 @@ class MessagesController < ApplicationController
         render json: @msg, :except => [:id, :chat_id],status: :ok
     end
 
-    # POST /applications/[app_token]/chats/[number]/messages
+    # POST /applications/[app_token]/chats/[number]/messages { "body": '' }
     def create
         max_number = Redis.current.get("#{@app.token}_#{@chat.id}").to_i
         if !max_number.present?
@@ -44,16 +44,16 @@ class MessagesController < ApplicationController
         end
     end
 
-    # GET /applications/[app_token]/chats/[number]/messages/search?search_body=[search_body]
+    # GET /applications/[app_token]/chats/[number]/messages/search { "search_body": '' }
     def search
-        search_result = Message.search_msg(@chat.id, params[:search_body])
+        search_result = Message.search_msg(@chat.id, msg_params[:search_body])
         render json: search_result, :except => [:id, :chat_id], status: :ok
     end
 
 
     private
     def msg_params
-        params.permit(:body)
+        params.permit(:body,:search_body)
     end
 
     def get_app

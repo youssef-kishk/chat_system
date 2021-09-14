@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     resources :chats, only: [:index, :show, :create, :destroy] do
       resources :messages, only: [:index, :show, :create, :destroy, :update] do
         collection do
-          get 'search'
+          post 'search'
         end
       end
     end

@@ -3,18 +3,18 @@ class MessagesController < ApplicationController
     before_action :get_chat
     before_action :get_msg, only: [:show, :destroy, :update]
 
-    # GET /applications/[app_token]/chats/[number]/messages
+    # GET /applications/[token]/chats/[number]/messages
     def index
         msgs = Message.where(chat_id: @chat.id)
         render json: msgs, :except => [:id, :chat_id],status: :ok
     end
 
-    # GET /applications/[app_token]/chats/[number]/messages/[number]
+    # GET /applications/[token]/chats/[number]/messages/[number]
     def show
         render json: @msg, :except => [:id, :chat_id],status: :ok
     end
 
-    # POST /applications/[app_token]/chats/[number]/messages { "body": '' }
+    # POST /applications/[token]/chats/[number]/messages { "body": '' }
     def create
         max_number = Redis.current.get("#{@app.token}_#{@chat.id}").to_i
         if !max_number.present?
@@ -29,13 +29,13 @@ class MessagesController < ApplicationController
         render json: {Number:max_number},status: :created    
     end
 
-    # DELETE /applications/[app_token]/chats/[number]/messages/[number]
+    # DELETE /applications/[token]/chats/[number]/messages/[number]
     def destroy
         @msg.destroy
         render json: @msg, :except => [:id, :chat_id],status: :ok
     end
 
-    # PUT /applications/[app_token]/chats/[number]/messages/[number] { "body": '' }
+    # PUT /applications/[token]/chats/[number]/messages/[number] { "body": '' }
     def update
         if @msg.update_attributes(msg_params)
             render json: @msg, :except => [:id, :chat_id],status: :ok
@@ -44,7 +44,7 @@ class MessagesController < ApplicationController
         end
     end
 
-    # GET /applications/[app_token]/chats/[number]/messages/search { "search_body": '' }
+    # GET /applications/[token]/chats/[number]/messages/search { "search_body": '' }
     def search
         search_result = Message.search_msg(@chat.id, msg_params[:search_body])
         render json: search_result, :except => [:id, :chat_id], status: :ok

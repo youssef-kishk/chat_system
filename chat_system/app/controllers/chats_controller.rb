@@ -2,18 +2,18 @@ class ChatsController < ApplicationController
     before_action :get_app
     before_action :get_chat, only: [:show, :destroy]
 
-    # GET /applications/[app_token]/chats
+    # GET /applications/[token]/chats
     def index
         chats = Chat.where(application_id: @app.id)
         render json: chats, :except => [:id, :application_id],status: :ok
     end
 
-    # GET /applications/[app_token]/chats/number
+    # GET /applications/[token]/chats/number
     def show
         render json: @chat, :except => [:id, :application_id],status: :ok
     end
 
-    # POST /applications/[app_token]/chats
+    # POST /applications/[token]/chats
     def create
         max_number = Redis.current.get(@app.token).to_i
         if !max_number.present?
@@ -28,7 +28,7 @@ class ChatsController < ApplicationController
         render json: {Number:max_number},status: :created    
     end
 
-    # DELETE /applications/[app_token]/chats/number
+    # DELETE /applications/[token]/chats/number
     def destroy
         @chat.destroy
         render json: @chat, :except => [:id, :application_id],status: :ok

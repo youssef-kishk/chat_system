@@ -156,5 +156,5 @@ In order to test the **messages/search** API responsible for seaching through me
 
 ## To be done:
 - Using docker so the app is containerized.
-- Add more documentation (swagger).
+- Add more documentation (Swagger, Postman collection).
 - Testing

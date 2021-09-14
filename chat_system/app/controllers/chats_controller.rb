@@ -15,12 +15,16 @@ class ChatsController < ApplicationController
 
     # POST /applications/[app_token]/chats
     def create
-        max_number = Chat.where(application_id: @app.id).maximum("number")
+        max_number = Redis.current.get(@app.token).to_i
         if !max_number.present?
             max_number = 0
+            Redis.current.set(@app.token, 1)
+        else
+            Redis.current.incr(@app.token)
         end
         max_number +=1
         HandleChatWorker.perform_async(max_number, @app.id)
+        @app.update_attribute(:chats_count , @app.chats_count+1)
         render json: {Number:max_number},status: :created    
     end
 

@@ -37,3 +37,8 @@ gem 'elasticsearch-rails', git: 'git://github.com/elastic/elasticsearch-rails.gi
 
 # Sidekiq
 gem 'sidekiq', '~> 5.2.8'
+
+# Redis
+gem 'redis'
+gem 'redis-namespace'
+gem 'redis-rails'

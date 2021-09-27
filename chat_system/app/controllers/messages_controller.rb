@@ -16,17 +16,21 @@ class MessagesController < ApplicationController
 
     # POST /applications/[token]/chats/[number]/messages { "body": '' }
     def create
-        max_number = Redis.current.get("#{@app.token}_#{@chat.id}").to_i
-        if !max_number.present?
-            max_number = 0
-            Redis.current.set("#{@app.token}_#{@chat.id}", 1)
+        if msg_params.has_key?(:body)
+            max_number = Redis.current.get("#{@app.token}_#{@chat.id}").to_i
+            if !max_number.present?
+                max_number = 0
+                Redis.current.set("#{@app.token}_#{@chat.id}", 1)
+            else
+                Redis.current.incr("#{@app.token}_#{@chat.id}")
+            end
+            max_number +=1
+            HandleMessageWorker.perform_async(max_number,@chat.id,msg_params["body"])
+            @chat.update_attribute(:msgs_count , @chat.msgs_count+1)
+            render json: {Number:max_number},status: :created    
         else
-            Redis.current.incr("#{@app.token}_#{@chat.id}")
+            render json: {status: 'ERROR', message: 'Message not created, body is required'},status: :unprocessable_entity
         end
-        max_number +=1
-        HandleMessageWorker.perform_async(max_number,@chat.id,msg_params["body"])
-        @chat.update_attribute(:msgs_count , @chat.msgs_count+1)
-        render json: {Number:max_number},status: :created    
     end
 
     # DELETE /applications/[token]/chats/[number]/messages/[number]

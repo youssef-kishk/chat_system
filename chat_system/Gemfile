@@ -42,3 +42,5 @@ gem 'sidekiq', '~> 5.2.8'
 gem 'redis'
 gem 'redis-namespace'
 gem 'redis-rails'
+
+gem 'rspec-rails'

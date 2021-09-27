@@ -24,8 +24,12 @@ class ApplicationsController < ApplicationController
 
     # DELETE /applications/[token]
     def destroy
-        @app.destroy
-        render json: @app, :except => [:id],status: :ok
+        begin
+            @app.destroy
+            render json: @app, :except => [:id],status: :ok   
+        rescue Exception
+            render json: {status: 'ERROR', message: 'Application delete failed'},status: :bad_request
+        end
     end
 
     # PUT /applications/[token] { "name": '' }

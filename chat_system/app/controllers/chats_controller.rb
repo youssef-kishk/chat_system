@@ -30,8 +30,12 @@ class ChatsController < ApplicationController
 
     # DELETE /applications/[token]/chats/number
     def destroy
-        @chat.destroy
-        render json: @chat, :except => [:id, :application_id],status: :ok
+        begin
+            @chat.destroy
+            render json: @chat, :except => [:id, :application_id],status: :ok
+        rescue Exception
+            render json: {status: 'ERROR', message: 'Chat delete failed'},status: :bad_request
+        end
     end
 
 

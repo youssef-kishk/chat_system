@@ -153,8 +153,9 @@ A simple chat system that allow adding, editing, deleting and searching for appl
 In order to test the **messages/search** API responsible for seaching through messages body, make sure Elastic search is running in your machine:
 - For linux envirnoment you can use: [**./elastic_search.sh**]
 
+- [**rspec**] for running APIs test, you can edit the paramters and body of requests from spec files
+
 
 ## To be done:
 - Using docker so the app is containerized.
 - Add more documentation (Swagger, Postman collection).
-- Testing
